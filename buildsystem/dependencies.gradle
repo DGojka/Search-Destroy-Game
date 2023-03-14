@@ -1,0 +1,55 @@
+ext {
+    ktxVersion = "1.7.0"
+    appCompatVersion = "1.5.0"
+    materialVersion = "1.6.1"
+    coreLibraries = [
+            "androidx.core:core-ktx:$ktxVersion",
+            "androidx.appcompat:appcompat:$appCompatVersion",
+            "com.google.android.material:material:$materialVersion"
+    ]
+
+    junitVersion = "4.13.2"
+    test = [
+            "junit:junit:$junitVersion"
+    ]
+
+    espresso = "3.4.0"
+    andoidJunitVersion = "1.1.3"
+
+    composeVersion = '1.2.1'
+    composeNavVersion = "2.5.1"
+    activityComposeVersion = '1.5.0'
+
+    androidTest = [
+            "androidx.test.ext:junit:$andoidJunitVersion",
+            "androidx.test.espresso:espresso-core:$espresso",
+            "androidx.compose.ui:ui-test-junit4:$composeVersion"
+    ]
+
+    jetpackCompose = [
+            "androidx.compose.ui:ui:$composeVersion",
+            "androidx.compose.material:material:$composeVersion",
+            "androidx.compose.ui:ui-tooling-preview:$composeVersion",
+            "androidx.activity:activity-compose:$activityComposeVersion",
+            "androidx.navigation:navigation-runtime-ktx:$composeNavVersion",
+            "androidx.navigation:navigation-compose:$composeNavVersion"
+    ]
+
+    composeDebugImplementation = [
+            "androidx.compose.ui:ui-tooling:$composeVersion",
+            "androidx.compose.ui:ui-test-manifest:$composeVersion"
+    ]
+
+    coroutinesVersion = "1.6.4"
+    coroutines = [
+            "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    ]
+    coroutinesRunTimeVersion = "2.5.1"
+    coroutinesRunTime = [
+            "androidx.lifecycle:lifecycle-viewmodel-ktx:$coroutinesRunTimeVersion",
+            "androidx.lifecycle:lifecycle-runtime-ktx:$coroutinesRunTimeVersion",
+            "androidx.lifecycle:lifecycle-livedata-ktx:$coroutinesRunTimeVersion"
+
+    ]
+}
