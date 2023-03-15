@@ -3,12 +3,15 @@ package com.example.searchanddestroy.bombscreen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BombScreenViewModel : ViewModel() {
+@HiltViewModel
+class BombScreenViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow<BombScreenUiState>(BombScreenUiState.Init)
     val uiState: StateFlow<BombScreenUiState> = _uiState
     private var timer: Timer = Timer()
