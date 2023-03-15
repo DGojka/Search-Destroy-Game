@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SearchAndDestroy</string>
+    <string name="plant">PLANT</string>
+    <string name="defuse">DEFUSE</string>
+    <string name="terrorist_wins">TERRORIST WINS!</string>
+    <string name="bomb_defused">BOMB SUCCESFULLY DEFUSED</string>
 </resources>
