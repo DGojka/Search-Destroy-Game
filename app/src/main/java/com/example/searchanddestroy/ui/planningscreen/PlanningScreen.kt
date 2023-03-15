@@ -15,10 +15,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.navigation.Screen
+import com.example.searchanddestroy.navigation.Screen.Companion.SETTINGS
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 @Composable
 fun PlanningScreen(navController: NavController) {
     val vm = hiltViewModel<PlanningScreenViewModel>()
+    val gson = GsonBuilder().create()
     Box(
         Modifier
             .fillMaxSize()
@@ -27,7 +31,7 @@ fun PlanningScreen(navController: NavController) {
     ) {
         Settings(vm)
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            StartGameButton(navController)
+            StartGameButton(navController, vm, gson)
         }
     }
 }
@@ -74,7 +78,7 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = defusingPasswordLength, onValueChange = {
                 defusingPasswordLength = it
-                vm.changeDefusingPasswordLength(it.toInt())
+                vm.changeDefusingPasswordLength(it.toIntOrNull()?:0)
             })
     }
 }
@@ -91,7 +95,7 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
                 timeToExplodeSeconds = it
-                vm.changeTimeToExplode(it.toInt())
+                vm.changeTimeToExplode(it.toIntOrNull()?:0)
             })
     }
 }
@@ -108,14 +112,21 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = wrongPasswordPenalty, onValueChange = {
                 wrongPasswordPenalty = it
-                vm.changeWrongPasswordPenalty(it.toInt())
+                vm.changeWrongPasswordPenalty(it.toIntOrNull()?:0)
             })
     }
 }
 
 @Composable
-private fun StartGameButton(navController: NavController) {
-    Button(onClick = { navController.navigate(Screen.BombScreen.route) }) {
+private fun StartGameButton(navController: NavController, vm: PlanningScreenViewModel, gson: Gson) {
+    Button(onClick = {
+        navController.navigate(
+            Screen.BombScreen.route.replace(
+                SETTINGS,
+                gson.toJson(vm.uiState.value)
+            )
+        )
+    }) {
         Text(text = stringResource(id = R.string.start_game))
     }
 }

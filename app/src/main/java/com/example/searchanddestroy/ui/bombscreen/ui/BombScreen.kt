@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.bombscreen
+package com.example.searchanddestroy.ui.bombscreen.ui
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.searchanddestroy.R
-import com.example.searchanddestroy.ui.bombscreen.ui.BombScreenUiState
-import com.example.searchanddestroy.ui.bombscreen.ui.BombScreenViewModel
 import kotlin.math.ceil
 
 @Composable

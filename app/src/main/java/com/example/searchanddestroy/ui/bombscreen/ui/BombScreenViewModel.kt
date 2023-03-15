@@ -1,11 +1,14 @@
 package com.example.searchanddestroy.ui.bombscreen.ui
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.ui.bombscreen.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
+import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
+import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,15 +17,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BombScreenViewModel @Inject constructor(private val speaker: Speaker) : ViewModel() {
+class BombScreenViewModel @Inject constructor(
+    private val speaker: Speaker,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _uiState = MutableStateFlow<BombScreenUiState>(BombScreenUiState.Init)
     val uiState: StateFlow<BombScreenUiState> = _uiState
     private var timer: Timer = Timer()
-    private val LOG_TAG = BombScreenViewModel::class.qualifiedName
+    private val gson = GsonBuilder().create()
+    private val settingsJson: String? = savedStateHandle[SETTINGS]
+    private lateinit var settings: GameSettings
 
     init {
         viewModelScope.launch {
-            _uiState.emit(BombScreenUiState.Loaded(generateRandomString()))
+            settings = gson.fromJson(
+                settingsJson,
+                GameSettings::class.java
+            )
+            _uiState.emit(BombScreenUiState.Loaded(generateRandomString(settings.plantingPasswordLength)))
         }
     }
 
@@ -33,7 +45,7 @@ class BombScreenViewModel @Inject constructor(private val speaker: Speaker) : Vi
             viewModelScope.launch {
                 val statePlanted = _uiState.value as BombScreenUiState.Loaded
                 Log.i(LOG_TAG, "WRONG PASSWORD PLANTING")
-                _uiState.value = statePlanted.copy(password = generateRandomString())
+                _uiState.value = statePlanted.copy(password = generateRandomString(settings.plantingPasswordLength))
             }
         }
     }
@@ -44,7 +56,7 @@ class BombScreenViewModel @Inject constructor(private val speaker: Speaker) : Vi
             defuse(statePlanted)
         } else {
             Log.i(LOG_TAG, "WRONG PASSWORD DEFUSING")
-            _uiState.value = statePlanted.copy(password = generateRandomString())
+            _uiState.value = statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
         }
     }
 
@@ -64,12 +76,12 @@ class BombScreenViewModel @Inject constructor(private val speaker: Speaker) : Vi
 
             _uiState.emit(
                 BombScreenUiState.Planted(
-                    generateRandomString(),
-                    TIMER_TOTAL_SECONDS,
-                    TIMER_TOTAL_SECONDS.toFloat()
+                    generateRandomString(settings.defusingPasswordLength),
+                    settings.timeToExplode,
+                    settings.timeToExplode.toFloat()
                 )
             )
-            timer.setDuration(TIMER_TOTAL_SECONDS)
+            timer.setDuration(settings.timeToExplode)
             timer.start()
             timer.flow.takeWhile { it >= 0 }.collect { currentMs ->
                 _uiState.value =
@@ -91,6 +103,7 @@ class BombScreenViewModel @Inject constructor(private val speaker: Speaker) : Vi
     }
 
     companion object {
-        private const val TIMER_TOTAL_SECONDS = 60
+        private val LOG_TAG = BombScreenViewModel::class.qualifiedName
+        private const val SETTINGS = "settings"
     }
 }

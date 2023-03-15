@@ -62,4 +62,8 @@ ext {
     daggerHiltKapt = [
             "com.google.dagger:hilt-compiler:$daggerHiltVersion"
     ]
+    gsonVersion = "2.10"
+    gson = [
+            "com.google.code.gson:gson:$gsonVersion"
+    ]
 }
