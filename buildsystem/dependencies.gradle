@@ -54,8 +54,10 @@ ext {
     ]
 
     daggerHiltVersion = "2.44"
+    composeHiltNavigationVersion = "1.0.0"
     daggerHilt = [
-            "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+            "com.google.dagger:hilt-android:$daggerHiltVersion",
+            "androidx.hilt:hilt-navigation-compose:$composeHiltNavigationVersion"
     ]
     daggerHiltKapt = [
             "com.google.dagger:hilt-compiler:$daggerHiltVersion"
