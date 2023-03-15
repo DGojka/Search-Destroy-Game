@@ -1,7 +1,7 @@
 package com.example.searchanddestroy.di
 
 import android.content.Context
-import com.example.searchanddestroy.bombscreen.Speaker
+import com.example.searchanddestroy.ui.bombscreen.Speaker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

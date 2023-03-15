@@ -6,4 +6,9 @@
     <string name="bomb_defused">BOMB SUCCESSFULLY DEFUSED</string>
     <string name="bomb_planted">BOMB PLANTED</string>
     <string name="wrong_password">WRONG PASSWORD</string>
+    <string name="plant_length">Planting password length:</string>
+    <string name="defusing_length">Defusing password length:</string>
+    <string name="time_to_explode">Time to explode:</string>
+    <string name="wrong_password_penalty">"Wrong password penalty:</string>
+    <string name="start_game">START GAME</string>
 </resources>

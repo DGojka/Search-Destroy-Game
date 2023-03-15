@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.searchanddestroy.R
-import com.example.searchanddestroy.bombscreen.ui.BombScreenUiState
-import com.example.searchanddestroy.bombscreen.ui.BombScreenViewModel
+import com.example.searchanddestroy.ui.bombscreen.ui.BombScreenUiState
+import com.example.searchanddestroy.ui.bombscreen.ui.BombScreenViewModel
 import kotlin.math.ceil
 
 @Composable
@@ -53,7 +53,7 @@ fun BombScreen() {
 }
 
 @Composable
-fun Planting(password: String, vm: BombScreenViewModel) {
+private fun Planting(password: String, vm: BombScreenViewModel) {
     Box(
         Modifier
             .fillMaxSize()
@@ -78,7 +78,7 @@ fun Planting(password: String, vm: BombScreenViewModel) {
 }
 
 @Composable
-fun BombPlanted(
+private fun BombPlanted(
     password: String,
     vm: BombScreenViewModel,
     totalTime: Int,
@@ -127,7 +127,7 @@ fun BombPlanted(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun TimerComposable(
+private fun TimerComposable(
     modifier: Modifier = Modifier,
     totalSeconds: Float,
     currentSeconds: Float,
@@ -184,14 +184,14 @@ fun TimerComposable(
 }
 
 @Composable
-fun BombExploded() {
+private fun BombExploded() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = stringResource(id = R.string.terrorist_wins), fontSize = 72.sp)
     }
 }
 
 @Composable
-fun TypePassword(onPasswordEntered: (password: String) -> Unit) {
+private fun TypePassword(onPasswordEntered: (password: String) -> Unit) {
     var typedPassword by remember { mutableStateOf("") }
     TextField(value = typedPassword, onValueChange = {
         typedPassword = it
