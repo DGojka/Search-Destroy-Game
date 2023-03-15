@@ -16,6 +16,10 @@ import androidx.navigation.NavController
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.navigation.Screen
 import com.example.searchanddestroy.navigation.Screen.Companion.SETTINGS
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_DEFUSING_PASSWORD_LENGTH
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_PLANTING_PASSWORD_LENGTH
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -51,7 +55,7 @@ private fun Settings(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
-    var plantingPasswordLength by remember { mutableStateOf("10") }
+    var plantingPasswordLength by remember { mutableStateOf(DEFAULT_PLANTING_PASSWORD_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -68,7 +72,7 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
-    var defusingPasswordLength by remember { mutableStateOf("10") }
+    var defusingPasswordLength by remember { mutableStateOf(DEFAULT_DEFUSING_PASSWORD_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -78,14 +82,14 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = defusingPasswordLength, onValueChange = {
                 defusingPasswordLength = it
-                vm.changeDefusingPasswordLength(it.toIntOrNull()?:0)
+                vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 0)
             })
     }
 }
 
 @Composable
 private fun TimeToExplode(vm: PlanningScreenViewModel) {
-    var timeToExplodeSeconds by remember { mutableStateOf("180") }
+    var timeToExplodeSeconds by remember { mutableStateOf(DEFAULT_TIME_TO_EXPLODE.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -95,14 +99,14 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
                 timeToExplodeSeconds = it
-                vm.changeTimeToExplode(it.toIntOrNull()?:0)
+                vm.changeTimeToExplode(it.toIntOrNull() ?: 0)
             })
     }
 }
 
 @Composable
 private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
-    var wrongPasswordPenalty by remember { mutableStateOf("30") }
+    var wrongPasswordPenalty by remember { mutableStateOf(DefaultSettings.DEFAULT_WRONG_PASSWORD_PENALTY_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -112,7 +116,7 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = wrongPasswordPenalty, onValueChange = {
                 wrongPasswordPenalty = it
-                vm.changeWrongPasswordPenalty(it.toIntOrNull()?:0)
+                vm.changeWrongPasswordPenalty(it.toIntOrNull() ?: 0)
             })
     }
 }

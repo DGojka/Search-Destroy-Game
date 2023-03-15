@@ -27,4 +27,5 @@ class PlanningScreenViewModel @Inject constructor() : ViewModel() {
     fun changeWrongPasswordPenalty(penaltyTime: Int) {
         _uiState.value = _uiState.value.copy(wrongPasswordPenalty = penaltyTime)
     }
+
 }
