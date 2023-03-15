@@ -19,11 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.searchanddestroy.R
 import kotlin.math.ceil
 
 @Composable
-fun BombScreen(vm: BombScreenViewModel) {
+fun BombScreen() {
+    val vm = hiltViewModel<BombScreenViewModel>()
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

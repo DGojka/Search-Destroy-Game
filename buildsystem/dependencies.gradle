@@ -52,4 +52,12 @@ ext {
             "androidx.lifecycle:lifecycle-livedata-ktx:$coroutinesRunTimeVersion"
 
     ]
+
+    daggerHiltVersion = "2.44"
+    daggerHilt = [
+            "com.google.dagger:hilt-android-compiler:$daggerHiltVersion"
+    ]
+    daggerHiltKapt = [
+            "com.google.dagger:hilt-compiler:$daggerHiltVersion"
+    ]
 }
