@@ -3,5 +3,7 @@
     <string name="plant">PLANT</string>
     <string name="defuse">DEFUSE</string>
     <string name="terrorist_wins">TERRORIST WINS!</string>
-    <string name="bomb_defused">BOMB SUCCESFULLY DEFUSED</string>
+    <string name="bomb_defused">BOMB SUCCESSFULLY DEFUSED</string>
+    <string name="bomb_planted">BOMB PLANTED</string>
+    <string name="wrong_password">WRONG PASSWORD</string>
 </resources>

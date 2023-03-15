@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.searchanddestroy.R
+import com.example.searchanddestroy.bombscreen.ui.BombScreenUiState
+import com.example.searchanddestroy.bombscreen.ui.BombScreenViewModel
 import kotlin.math.ceil
 
 @Composable
