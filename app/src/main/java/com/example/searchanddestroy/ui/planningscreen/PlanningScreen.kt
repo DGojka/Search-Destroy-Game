@@ -8,10 +8,12 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.searchanddestroy.R
 import com.example.searchanddestroy.navigation.Screen
 
 @Composable
@@ -50,7 +52,7 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Planting password length: ")
+        Text(text = stringResource(id = R.string.plant_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = plantingPasswordLength, onValueChange = {
@@ -67,7 +69,7 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Defusing password length: ")
+        Text(text = stringResource(id = R.string.defusing_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = defusingPasswordLength, onValueChange = {
@@ -84,7 +86,7 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Time to explode: ")
+        Text(text = stringResource(id = R.string.time_to_explode))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
@@ -101,7 +103,7 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Wrong password penalty:")
+        Text(text = stringResource(id = R.string.wrong_password_penalty))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = wrongPasswordPenalty, onValueChange = {
@@ -114,6 +116,6 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
 @Composable
 private fun StartGameButton(navController: NavController) {
     Button(onClick = { navController.navigate(Screen.BombScreen.route) }) {
-        Text(text = "START GAME")
+        Text(text = stringResource(id = R.string.start_game))
     }
 }
