@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
-import com.example.searchanddestroy.bombscreen.BombScreen
+import com.example.searchanddestroy.ui.bombscreen.ui.BombScreen
 import com.example.searchanddestroy.ui.planningscreen.PlanningScreen
 
 @Composable
