@@ -14,10 +14,12 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.searchanddestroy.R
 import kotlin.math.ceil
 
 @Composable
@@ -65,7 +67,7 @@ fun Planting(password: String, vm: BombScreenViewModel) {
             TypePassword(onPasswordEntered = { typedPassword = it })
             Spacer(Modifier.height(24.dp))
             Button(onClick = { vm.startPlanting(typedPassword) }) {
-                Text(text = "PLANT")
+                Text(text = stringResource(id = R.string.plant))
             }
         }
     }
@@ -97,7 +99,7 @@ fun BombPlanted(
                 TypePassword(onPasswordEntered = { typedPassword = it })
                 Spacer(Modifier.height(24.dp))
                 Button(onClick = { vm.startDefusing(typedPassword) }) {
-                    Text(text = "DEFUSE")
+                    Text(text = stringResource(id = R.string.defuse))
                 }
             }
         } else {
@@ -106,7 +108,7 @@ fun BombPlanted(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "BOMB SUCCESFULLY DEFUSED", fontSize = 16.sp)
+                Text(text = stringResource(id = R.string.bomb_defused), fontSize = 16.sp)
                 Spacer(Modifier.height(80.dp))
                 TimerComposable(
                     modifier = Modifier.size(300.dp),
@@ -180,7 +182,7 @@ fun TimerComposable(
 @Composable
 fun BombExploded() {
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "TERRORIST WINS", fontSize = 72.sp)
+        Text(text = stringResource(id = R.string.terrorist_wins), fontSize = 72.sp)
     }
 }
 
