@@ -102,7 +102,7 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
-    var wrongPasswordPenalty by remember { mutableStateOf("3") }
+    var wrongPasswordPenalty by remember { mutableStateOf("30") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

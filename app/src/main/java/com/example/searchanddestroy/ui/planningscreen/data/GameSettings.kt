@@ -4,5 +4,5 @@ data class GameSettings(
     val plantingPasswordLength: Int = 10,
     val defusingPasswordLength: Int = 10,
     val timeToExplode: Int = 180,
-    val wrongPasswordPenalty: Int = 3
+    val wrongPasswordPenalty: Int = 30
 )

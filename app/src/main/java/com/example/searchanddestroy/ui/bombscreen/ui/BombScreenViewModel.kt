@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
+import java.lang.StrictMath.ceil
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,7 +46,8 @@ class BombScreenViewModel @Inject constructor(
             viewModelScope.launch {
                 val statePlanted = _uiState.value as BombScreenUiState.Loaded
                 Log.i(LOG_TAG, "WRONG PASSWORD PLANTING")
-                _uiState.value = statePlanted.copy(password = generateRandomString(settings.plantingPasswordLength))
+                _uiState.value =
+                    statePlanted.copy(password = generateRandomString(settings.plantingPasswordLength))
             }
         }
     }
@@ -56,7 +58,17 @@ class BombScreenViewModel @Inject constructor(
             defuse(statePlanted)
         } else {
             Log.i(LOG_TAG, "WRONG PASSWORD DEFUSING")
-            _uiState.value = statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
+            val timeWithPenalty =
+                ceil((statePlanted.currentMs.toDouble()) / 1000 - settings.wrongPasswordPenalty).toInt()
+            timer.setDuration(timeWithPenalty)
+            if (timeWithPenalty <= 0) {
+                viewModelScope.launch {
+                    _uiState.emit(BombScreenUiState.Exploded)
+                }
+            } else {
+                _uiState.value =
+                    statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
+            }
         }
     }
 
