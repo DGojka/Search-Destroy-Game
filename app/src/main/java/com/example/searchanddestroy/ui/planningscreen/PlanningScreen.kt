@@ -65,7 +65,7 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = plantingPasswordLength, onValueChange = {
                 plantingPasswordLength = it
-                vm.changePlantingPasswordLength(it.toInt())
+                vm.changePlantingPasswordLength(it.toIntOrNull() ?: 1)
             })
     }
 }
@@ -82,8 +82,9 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = defusingPasswordLength, onValueChange = {
                 defusingPasswordLength = it
-                vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 0)
-            })
+                vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 1)
+            }
+        )
     }
 }
 
@@ -99,7 +100,7 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
                 timeToExplodeSeconds = it
-                vm.changeTimeToExplode(it.toIntOrNull() ?: 0)
+                vm.changeTimeToExplode(it.toIntOrNull() ?: 1)
             })
     }
 }
