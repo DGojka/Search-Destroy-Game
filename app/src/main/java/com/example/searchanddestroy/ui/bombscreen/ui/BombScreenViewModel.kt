@@ -1,11 +1,11 @@
-package com.example.searchanddestroy.bombscreen.ui
+package com.example.searchanddestroy.ui.bombscreen.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.searchanddestroy.R
-import com.example.searchanddestroy.bombscreen.Speaker
-import com.example.searchanddestroy.bombscreen.Timer
+import com.example.searchanddestroy.ui.bombscreen.Speaker
+import com.example.searchanddestroy.ui.bombscreen.Timer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

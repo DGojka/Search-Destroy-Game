@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.bombscreen.ui
+package com.example.searchanddestroy.ui.bombscreen.ui
 
 sealed class BombScreenUiState(open val password: String) {
     object Init : BombScreenUiState("")
