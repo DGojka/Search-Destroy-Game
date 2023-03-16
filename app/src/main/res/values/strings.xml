@@ -11,4 +11,5 @@
     <string name="time_to_explode">Time to explode:</string>
     <string name="wrong_password_penalty">"Wrong password penalty:</string>
     <string name="start_game">START GAME</string>
+    <string name="max_value">Max value: </string>
 </resources>

@@ -20,6 +20,8 @@ import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_DEFUSING_PASSWORD_LENGTH
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_PLANTING_PASSWORD_LENGTH
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -64,9 +66,15 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = plantingPasswordLength, onValueChange = {
-                plantingPasswordLength = it
-                vm.changePlantingPasswordLength(it.toIntOrNull() ?: 1)
-            })
+                if((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH){
+                    plantingPasswordLength = it
+                    vm.changePlantingPasswordLength(it.toIntOrNull() ?: 1)
+                }else {
+                    plantingPasswordLength = MAX_PASSWORD_LENGTH.toString()
+                    vm.changeDefusingPasswordLength(MAX_PASSWORD_LENGTH)
+                }
+
+            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") })
     }
 }
 
@@ -81,9 +89,14 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = defusingPasswordLength, onValueChange = {
-                defusingPasswordLength = it
-                vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 1)
-            }
+                if ((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH) {
+                    defusingPasswordLength = it
+                    vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 1)
+                } else {
+                    defusingPasswordLength = MAX_PASSWORD_LENGTH.toString()
+                    vm.changeDefusingPasswordLength(MAX_PASSWORD_LENGTH)
+                }
+            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") }
         )
     }
 }
@@ -99,9 +112,14 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
-                timeToExplodeSeconds = it
-                vm.changeTimeToExplode(it.toIntOrNull() ?: 1)
-            })
+                if ((it.toIntOrNull() ?: 0) <= MAX_TIME_TO_EXPLODE) {
+                    timeToExplodeSeconds = it
+                    vm.changeTimeToExplode(it.toIntOrNull() ?: 1)
+                } else {
+                    timeToExplodeSeconds = MAX_TIME_TO_EXPLODE.toString()
+                    vm.changeTimeToExplode(MAX_TIME_TO_EXPLODE)
+                }
+            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
     }
 }
 
@@ -116,9 +134,14 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = wrongPasswordPenalty, onValueChange = {
-                wrongPasswordPenalty = it
-                vm.changeWrongPasswordPenalty(it.toIntOrNull() ?: 0)
-            })
+                if ((it.toIntOrNull() ?: 0) <= MAX_TIME_TO_EXPLODE) {
+                    wrongPasswordPenalty = it
+                    vm.changeWrongPasswordPenalty(it.toIntOrNull() ?: 0)
+                } else {
+                    wrongPasswordPenalty = MAX_TIME_TO_EXPLODE.toString()
+                    vm.changeWrongPasswordPenalty(MAX_TIME_TO_EXPLODE)
+                }
+            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
     }
 }
 
