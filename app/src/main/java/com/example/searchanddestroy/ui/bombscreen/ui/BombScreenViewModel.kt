@@ -111,10 +111,24 @@ class BombScreenViewModel @Inject constructor(
     }
 
     private fun generateRandomString(stringLength: Int = 10): String {
+        if (singleStringMaxValue < stringLength) {
+            return generateStringLongerThanSingleUUIDLength(stringLength).substring(0, stringLength)
+        }
         return java.util.UUID.randomUUID().toString().substring(0, stringLength)
     }
 
+    private fun generateStringLongerThanSingleUUIDLength(stringLength: Int): String {
+        val numberOfStringsToGenerate =
+            ceil(stringLength.toDouble() / singleStringMaxValue.toDouble()).toInt()
+        var randomString = ""
+        for (i in 1..numberOfStringsToGenerate) {
+            randomString += java.util.UUID.randomUUID().toString()
+        }
+        return randomString
+    }
+
     companion object {
+        private const val singleStringMaxValue = 36
         private val LOG_TAG = BombScreenViewModel::class.qualifiedName
         private const val SETTINGS = "settings"
     }
