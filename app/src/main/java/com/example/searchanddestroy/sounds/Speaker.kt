@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.ui.bombscreen
+package com.example.searchanddestroy.sounds
 
 import android.content.Context
 import android.speech.tts.TextToSpeech

@@ -5,7 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.searchanddestroy.R
-import com.example.searchanddestroy.ui.bombscreen.Speaker
+import com.example.searchanddestroy.sounds.Player
+import com.example.searchanddestroy.sounds.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import com.google.gson.GsonBuilder
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BombScreenViewModel @Inject constructor(
     private val speaker: Speaker,
+    private val player: Player,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<BombScreenUiState>(BombScreenUiState.Init)
