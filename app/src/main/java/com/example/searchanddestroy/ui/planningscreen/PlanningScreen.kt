@@ -22,6 +22,7 @@ import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Compa
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
 import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MIN_TIME_TO_EXPLODE
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -112,9 +113,12 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = timeToExplodeSeconds, onValueChange = {
-                if ((it.toIntOrNull() ?: 0) <= MAX_TIME_TO_EXPLODE) {
+                if ((it.toIntOrNull() ?: 0) in MIN_TIME_TO_EXPLODE.. MAX_TIME_TO_EXPLODE) {
                     timeToExplodeSeconds = it
                     vm.changeTimeToExplode(it.toIntOrNull() ?: 1)
+                } else if((it.toIntOrNull() ?: 0) < MIN_TIME_TO_EXPLODE){
+                    timeToExplodeSeconds = it
+                    vm.changeTimeToExplode(MIN_TIME_TO_EXPLODE)
                 } else {
                     timeToExplodeSeconds = MAX_TIME_TO_EXPLODE.toString()
                     vm.changeTimeToExplode(MAX_TIME_TO_EXPLODE)

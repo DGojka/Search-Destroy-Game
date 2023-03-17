@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.sounds.Player
+import com.example.searchanddestroy.sounds.SoundTrack
 import com.example.searchanddestroy.sounds.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
+import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,13 +62,8 @@ class BombScreenViewModel @Inject constructor(
             defuse(statePlanted)
         } else {
             Log.i(LOG_TAG, "WRONG PASSWORD DEFUSING")
-            val timeWithPenalty =
-                ceil((statePlanted.currentMs.toDouble()) / 1000 - settings.wrongPasswordPenalty).toInt()
-            timer.setDuration(timeWithPenalty)
-            if (timeWithPenalty <= 0) {
-                viewModelScope.launch {
-                    _uiState.emit(BombScreenUiState.Exploded)
-                }
+            if (statePlanted.currentMs/ 1000 > DefaultSettings.MIN_TIME_TO_EXPLODE) {
+                applyPenalty(statePlanted)
             } else {
                 _uiState.value =
                     statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
@@ -85,23 +82,51 @@ class BombScreenViewModel @Inject constructor(
 
     private fun plantBomb() {
         viewModelScope.launch {
-            speaker.say(stringId = R.string.bomb_planted)
-            Log.i(LOG_TAG, "BOMB PLANTED")
+            initBomb()
+            onBombPlanted()
+        }
+    }
 
-            _uiState.emit(
-                BombScreenUiState.Planted(
-                    generateRandomString(settings.defusingPasswordLength),
-                    settings.timeToExplode,
-                    settings.timeToExplode.toFloat()
-                )
+    private suspend fun initBomb(){
+        player.playSound(SoundTrack.BOMB_PLANTED)
+        player.playBombSound()
+        Log.i(LOG_TAG, "BOMB PLANTED")
+        _uiState.emit(
+            BombScreenUiState.Planted(
+                generateRandomString(settings.defusingPasswordLength),
+                settings.timeToExplode,
+                settings.timeToExplode.toFloat()
             )
-            timer.setDuration(settings.timeToExplode)
-            timer.start()
-            timer.flow.takeWhile { it >= 0 }.collect { currentMs ->
-                _uiState.value =
-                    (_uiState.value as BombScreenUiState.Planted).copy(currentMs = currentMs)
+        )
+    }
+
+    private suspend fun onBombPlanted() {
+        timer.setDuration(settings.timeToExplode)
+        timer.start()
+        timer.flow.takeWhile { it >= 0 }.collect { currentMs ->
+            _uiState.value =
+                (_uiState.value as BombScreenUiState.Planted).copy(currentMs = currentMs)
+            if (currentMs/1000 == intenseBombBeepingTime) {
+                player.stopBombSound()
+                player.playSound(SoundTrack.INTENSE_BOMB_SOUND)
             }
-            _uiState.emit(BombScreenUiState.Exploded)
+        }
+        _uiState.emit(BombScreenUiState.Exploded)
+        player.stopBombSound()
+    }
+
+    private fun applyPenalty(state: BombScreenUiState.Planted) {
+        val timeWithPenalty =
+            ceil((state.currentMs).toDouble()/1000 - settings.wrongPasswordPenalty).toInt()
+        if (timeWithPenalty > DefaultSettings.MIN_TIME_TO_EXPLODE) {
+            timer.setDuration(timeWithPenalty)
+            if (timeWithPenalty <= 0) {
+                viewModelScope.launch {
+                    _uiState.emit(BombScreenUiState.Exploded)
+                }
+            }
+        } else {
+            timer.setDuration(DefaultSettings.MIN_TIME_TO_EXPLODE)
         }
     }
 
@@ -131,6 +156,7 @@ class BombScreenViewModel @Inject constructor(
 
     companion object {
         private const val singleStringMaxValue = 36
+        private const val intenseBombBeepingTime = 13.5F
         private val LOG_TAG = BombScreenViewModel::class.qualifiedName
         private const val SETTINGS = "settings"
     }
