@@ -1,7 +1,8 @@
 package com.example.searchanddestroy.di
 
 import android.content.Context
-import com.example.searchanddestroy.ui.bombscreen.Speaker
+import com.example.searchanddestroy.sounds.Player
+import com.example.searchanddestroy.sounds.Speaker
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +20,11 @@ class AppModule {
     fun provideSpeaker(@ApplicationContext appContext: Context): Speaker {
         return Speaker(appContext)
     }
+
+    @Provides
+    @Singleton
+    fun providePlayer(@ApplicationContext appContext: Context): Player {
+        return Player(appContext)
+    }
 }
+
