@@ -16,13 +16,13 @@ import androidx.navigation.NavController
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.navigation.Screen
 import com.example.searchanddestroy.navigation.Screen.Companion.SETTINGS
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_DEFUSING_PASSWORD_LENGTH
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_PLANTING_PASSWORD_LENGTH
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings.Companion.MIN_TIME_TO_EXPLODE
+import com.example.searchanddestroy.database.DefaultSettings
+import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_DEFUSING_PASSWORD_LENGTH
+import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_PLANTING_PASSWORD_LENGTH
+import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
+import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
+import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
+import com.example.searchanddestroy.database.DefaultSettings.Companion.MIN_TIME_TO_EXPLODE
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 

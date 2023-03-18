@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.ui.planningscreen.data
+package com.example.searchanddestroy.database
 
 class DefaultSettings {
     companion object{

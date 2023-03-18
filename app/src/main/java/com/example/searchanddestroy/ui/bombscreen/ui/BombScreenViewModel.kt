@@ -9,7 +9,7 @@ import com.example.searchanddestroy.sounds.Player
 import com.example.searchanddestroy.sounds.SoundTrack
 import com.example.searchanddestroy.sounds.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
+import com.example.searchanddestroy.database.DefaultSettings
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
