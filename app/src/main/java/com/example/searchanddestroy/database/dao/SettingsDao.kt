@@ -1,23 +1,19 @@
 package com.example.searchanddestroy.database.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-import com.example.searchanddestroy.database.entity.SaveSlotEntity
+import androidx.room.*
+import com.example.searchanddestroy.database.entity.SettingsEntity
 
 @Dao
 interface SettingsDao {
-    @Query("SELECT * FROM save_slot")
-    fun getAll(): List<SaveSlotEntity>
+    @Query("SELECT * FROM settings")
+    fun getAll(): List<SettingsEntity>
 
     @Insert
-    fun add(saveSlotEntity: SaveSlotEntity)
+    fun add(settingsEntity: SettingsEntity)
 
     @Delete
-    fun delete(saveSlotEntity: SaveSlotEntity)
+    fun delete(settingsEntity: SettingsEntity)
 
     @Update
-    fun update(saveSlotEntity: SaveSlotEntity)
+    fun update(settingsEntity: SettingsEntity)
 }

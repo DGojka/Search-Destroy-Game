@@ -1,14 +1,20 @@
 package com.example.searchanddestroy.ui.planningscreen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.searchanddestroy.repository.Repository
+import com.example.searchanddestroy.repository.SaveSlot
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlanningScreenViewModel @Inject constructor() : ViewModel() {
+class PlanningScreenViewModel @Inject constructor(private val repository : Repository) : ViewModel() {
     private val _uiState = MutableStateFlow(GameSettings())
     val uiState: StateFlow<GameSettings> = _uiState
 
@@ -26,6 +32,13 @@ class PlanningScreenViewModel @Inject constructor() : ViewModel() {
 
     fun changeWrongPasswordPenalty(penaltyTime: Int) {
         _uiState.value = _uiState.value.copy(wrongPasswordPenalty = penaltyTime)
+    }
+
+    fun saveSettingsToSlot() {
+        viewModelScope.launch(Dispatchers.IO){
+            repository.addSaveSlotWithSettings(SaveSlot("1",_uiState.value))
+            Log.e("asd",repository.getAllSaveSlotsWithSettings().toString())
+        }
     }
 
 }

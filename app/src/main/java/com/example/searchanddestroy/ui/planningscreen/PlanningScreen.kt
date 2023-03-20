@@ -1,8 +1,10 @@
 package com.example.searchanddestroy.ui.planningscreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -36,6 +38,11 @@ fun PlanningScreen(navController: NavController) {
             .padding(12.dp),
         contentAlignment = Alignment.Center
     ) {
+        Box(modifier = Modifier.align(Alignment.TopCenter)) {
+            Card(modifier = Modifier.size(24.dp).clickable { vm.saveSettingsToSlot()  }) {
+                Text("1")
+            }
+        }
         Settings(vm)
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             StartGameButton(navController, vm, gson)
