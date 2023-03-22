@@ -1,6 +1,7 @@
 package com.example.searchanddestroy.repository
 
 import com.example.searchanddestroy.database.AppDatabase
+import com.example.searchanddestroy.database.DefaultSettings
 import com.example.searchanddestroy.database.entity.SaveSlotEntity
 import com.example.searchanddestroy.database.entity.SaveSlotWithSettingsEntity
 import com.example.searchanddestroy.database.entity.SettingsEntity
@@ -61,6 +62,19 @@ class RepositoryImpl(private val db: AppDatabase) : Repository {
                     saveSlotOwnerId = slot.id.toLong()
                 )
             )
+        }
+    }
+
+    override suspend fun saveLastUsedSettings(settings: GameSettings) {
+        val defaultSlot = SaveSlot(
+            DefaultSettings.DB_DEFAULT_SETTINGS_NAME,
+            settings,
+            DefaultSettings.DB_DEFAULT_SETTINGS_ID
+        )
+        if (db.settingsDao().getAll().getOrNull(DefaultSettings.DB_DEFAULT_SETTINGS_ID) == null) {
+            addSaveSlotWithSettings(defaultSlot)
+        } else {
+            updateSlot(defaultSlot)
         }
     }
 }

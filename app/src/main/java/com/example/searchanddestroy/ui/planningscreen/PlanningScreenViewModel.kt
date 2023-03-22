@@ -1,8 +1,8 @@
 package com.example.searchanddestroy.ui.planningscreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.searchanddestroy.database.DefaultSettings
 import com.example.searchanddestroy.repository.Repository
 import com.example.searchanddestroy.repository.SaveSlot
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
@@ -21,8 +21,19 @@ class PlanningScreenViewModel @Inject constructor(private val repository: Reposi
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-                _uiState.value =
-                    _uiState.value.copy(saveSlots = repository.getAllSaveSlotsWithSettings())
+            val saveSlots = repository.getAllSaveSlotsWithSettings()
+            val lastUsedSettings = saveSlots.getOrNull(DefaultSettings.DB_DEFAULT_SETTINGS_ID)
+            if (lastUsedSettings != null) {
+                with(lastUsedSettings.settings) {
+                    _uiState.value = _uiState.value.copy(
+                        plantingPasswordLength = plantingPasswordLength,
+                        defusingPasswordLength = defusingPasswordLength,
+                        timeToExplode = timeToExplode,
+                        wrongPasswordPenalty = wrongPasswordPenalty
+                    )
+                }
+            }
+            _uiState.value = _uiState.value.copy(saveSlots = saveSlots)
         }
     }
 
@@ -50,21 +61,46 @@ class PlanningScreenViewModel @Inject constructor(private val repository: Reposi
                     defusingPasswordLength = defusingPasswordLength,
                     timeToExplode = timeToExplode,
                     wrongPasswordPenalty = wrongPasswordPenalty
-                ), slotId
+                ), slotId + 1
             )
-            Log.e(saveSlot.id.toString(),saveSlot.id.toString())
 
             viewModelScope.launch(Dispatchers.IO) {
-                if (saveSlots.getOrNull(slotId-1) == null) {
+                if (saveSlots.getOrNull(slotId) == null) {
                     repository.addSaveSlotWithSettings(
                         saveSlot
                     )
                 } else {
                     repository.updateSlot(saveSlot)
                 }
-             Log.e("asd",repository.getAllSaveSlotsWithSettings().toString())
                 _uiState.value =
                     _uiState.value.copy(saveSlots = repository.getAllSaveSlotsWithSettings())
+            }
+        }
+    }
+
+    fun importSettingsFromSlot(slotId: Int) {
+        with(_uiState.value.saveSlots[slotId].settings) {
+            _uiState.value = _uiState.value.copy(
+                plantingPasswordLength = plantingPasswordLength,
+                defusingPasswordLength = defusingPasswordLength,
+                timeToExplode = timeToExplode,
+                wrongPasswordPenalty = wrongPasswordPenalty
+            )
+        }
+    }
+
+    fun saveLastUsedSettingsToDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            with(_uiState.value) {
+                repository.saveLastUsedSettings(
+                    GameSettings(
+                        plantingPasswordLength,
+                        defusingPasswordLength,
+                        timeToExplode,
+                        wrongPasswordPenalty
+                    )
+                )
+
             }
         }
     }

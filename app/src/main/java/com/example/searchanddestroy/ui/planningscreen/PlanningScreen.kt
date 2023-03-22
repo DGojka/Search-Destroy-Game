@@ -1,11 +1,11 @@
 package com.example.searchanddestroy.ui.planningscreen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,10 +31,6 @@ import androidx.navigation.NavController
 import com.example.searchanddestroy.R
 import com.example.searchanddestroy.navigation.Screen
 import com.example.searchanddestroy.navigation.Screen.Companion.SETTINGS
-import com.example.searchanddestroy.database.DefaultSettings
-import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_DEFUSING_PASSWORD_LENGTH
-import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_PLANTING_PASSWORD_LENGTH
-import com.example.searchanddestroy.database.DefaultSettings.Companion.DEFAULT_TIME_TO_EXPLODE
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MIN_TIME_TO_EXPLODE
@@ -78,31 +74,14 @@ private fun Settings(vm: PlanningScreenViewModel) {
 @Composable
 private fun SaveSlotList(vm: PlanningScreenViewModel) {
     with(vm.uiState.collectAsState().value.saveSlots) {
-        Row(Modifier) {
-            SaveSlot(
-                vm = vm,
-                slotId = 1,
-                slotName = getOrNull(0)?.name
-                    ?: "Empty save slot"
-            )
-            SaveSlot(
-                vm = vm,
-                slotId = 2,
-                slotName = getOrNull(1)?.name
-                    ?: "Empty save slot"
-            )
-            SaveSlot(
-                vm = vm,
-                slotId = 3,
-                slotName = getOrNull(2)?.name
-                    ?: "Empty save slot"
-            )
-            SaveSlot(
-                vm = vm,
-                slotId = 4,
-                slotName = getOrNull(3)?.name
-                    ?: "Empty save slot"
-            )
+        LazyRow {
+            items(4) {
+                SaveSlot(
+                    vm = vm,
+                    slotId = it+1,
+                    slotName = getOrNull(it+1)?.name ?: "Empty save slot"
+                )
+            }
         }
     }
 }
@@ -130,9 +109,8 @@ private fun SaveSlot(vm: PlanningScreenViewModel, slotId: Int, slotName: String)
             .combinedClickable(onClick = {
                 showDialog = true
             },
-                onLongClick = { Log.e("asd", "asd") }, onDoubleClick = {
-                    Log.e("asd", "asd")
-                })
+                onLongClick = { vm.importSettingsFromSlot(slotId) },
+                onDoubleClick = { vm.importSettingsFromSlot(slotId) })
     ) {
         Box(
             Modifier
@@ -169,10 +147,9 @@ private fun SaveSlotDialog(
                     onDismiss()
                 }) {
                     Text("Override current settings")
-                    //
                 }
                 Button(onClick = {
-                    //TODO import
+                    vm.importSettingsFromSlot(slotId)
                     onDismiss()
                 }) {
                     Text("Import settings")
@@ -239,7 +216,6 @@ fun ExerciseNameControls(
 
 @Composable
 private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
-    var plantingPasswordLength by remember { mutableStateOf(DEFAULT_PLANTING_PASSWORD_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -247,13 +223,11 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.plant_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = plantingPasswordLength, onValueChange = {
+            value = vm.uiState.collectAsState().value.plantingPasswordLength.toString(), onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH) {
-                    plantingPasswordLength = it
                     vm.changePlantingPasswordLength(it.toIntOrNull() ?: 1)
                 } else {
-                    plantingPasswordLength = MAX_PASSWORD_LENGTH.toString()
-                    vm.changeDefusingPasswordLength(MAX_PASSWORD_LENGTH)
+                    vm.changePlantingPasswordLength(MAX_PASSWORD_LENGTH)
                 }
 
             }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") })
@@ -262,7 +236,6 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
-    var defusingPasswordLength by remember { mutableStateOf(DEFAULT_DEFUSING_PASSWORD_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -270,12 +243,10 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.defusing_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = defusingPasswordLength, onValueChange = {
+            value = vm.uiState.collectAsState().value.defusingPasswordLength.toString(), onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH) {
-                    defusingPasswordLength = it
                     vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 1)
                 } else {
-                    defusingPasswordLength = MAX_PASSWORD_LENGTH.toString()
                     vm.changeDefusingPasswordLength(MAX_PASSWORD_LENGTH)
                 }
             }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") }
@@ -285,7 +256,6 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun TimeToExplode(vm: PlanningScreenViewModel) {
-    var timeToExplodeSeconds by remember { mutableStateOf(DEFAULT_TIME_TO_EXPLODE.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -293,15 +263,12 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.time_to_explode))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = timeToExplodeSeconds, onValueChange = {
+            value = vm.uiState.collectAsState().value.timeToExplode.toString(), onValueChange = {
                 if ((it.toIntOrNull() ?: 0) in MIN_TIME_TO_EXPLODE..MAX_TIME_TO_EXPLODE) {
-                    timeToExplodeSeconds = it
                     vm.changeTimeToExplode(it.toIntOrNull() ?: 1)
                 } else if ((it.toIntOrNull() ?: 0) < MIN_TIME_TO_EXPLODE) {
-                    timeToExplodeSeconds = it
                     vm.changeTimeToExplode(MIN_TIME_TO_EXPLODE)
                 } else {
-                    timeToExplodeSeconds = MAX_TIME_TO_EXPLODE.toString()
                     vm.changeTimeToExplode(MAX_TIME_TO_EXPLODE)
                 }
             }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
@@ -310,7 +277,6 @@ private fun TimeToExplode(vm: PlanningScreenViewModel) {
 
 @Composable
 private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
-    var wrongPasswordPenalty by remember { mutableStateOf(DefaultSettings.DEFAULT_WRONG_PASSWORD_PENALTY_LENGTH.toString()) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -318,12 +284,10 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.wrong_password_penalty))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = wrongPasswordPenalty, onValueChange = {
+            value = vm.uiState.collectAsState().value.wrongPasswordPenalty.toString(), onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_TIME_TO_EXPLODE) {
-                    wrongPasswordPenalty = it
                     vm.changeWrongPasswordPenalty(it.toIntOrNull() ?: 0)
                 } else {
-                    wrongPasswordPenalty = MAX_TIME_TO_EXPLODE.toString()
                     vm.changeWrongPasswordPenalty(MAX_TIME_TO_EXPLODE)
                 }
             }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
@@ -333,6 +297,7 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
 @Composable
 private fun StartGameButton(navController: NavController, vm: PlanningScreenViewModel, gson: Gson) {
     Button(onClick = {
+        vm.saveLastUsedSettingsToDb()
         navController.navigate(
             Screen.BombScreen.route.replace(
                 SETTINGS,

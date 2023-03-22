@@ -2,6 +2,9 @@ package com.example.searchanddestroy.database
 
 class DefaultSettings {
     companion object{
+        const val DB_DEFAULT_SETTINGS_NAME = "DEFAULT_SETTINGS"
+        const val DB_DEFAULT_SETTINGS_ID = 0
+
         const val DEFAULT_PLANTING_PASSWORD_LENGTH = 1
         const val DEFAULT_DEFUSING_PASSWORD_LENGTH = 10
         const val DEFAULT_TIME_TO_EXPLODE = 180
