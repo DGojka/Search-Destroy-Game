@@ -22,7 +22,8 @@ class RepositoryImpl(private val db: AppDatabase) : Repository {
                     defusingPasswordLength,
                     timeToExplode,
                     wrongPasswordPenalty
-                )
+                ),
+                id = saveSlotOwnerId.toInt()
             )
         }
     }
@@ -32,30 +33,34 @@ class RepositoryImpl(private val db: AppDatabase) : Repository {
     }
 
     override suspend fun addSaveSlotWithSettings(slot: SaveSlot) {
-        val slotId = generateSlotId()
-        val settingsId = generateSettingId()
-        db.saveSlotDao().add(SaveSlotEntity(slotId, slot.name))
+        db.saveSlotDao().add(SaveSlotEntity(slot.id.toLong(), slot.name))
         with(slot.settings) {
             db.settingsDao().add(
                 SettingsEntity(
-                    id = settingsId,
+                    id = slot.id.toLong(),
                     plantingPasswordLength = plantingPasswordLength,
                     defusingPasswordLength = defusingPasswordLength,
                     timeToExplode = timeToExplode,
                     wrongPasswordPenalty = wrongPasswordPenalty,
-                    saveSlotOwnerId = slotId
+                    saveSlotOwnerId = slot.id.toLong()
                 )
             )
         }
     }
 
-    override suspend fun updateSlot(slotId: Long, newSettings: SettingsEntity) {
-        TODO("Not yet implemented")
+    override suspend fun updateSlot(slot: SaveSlot) {
+        db.saveSlotDao().update(SaveSlotEntity(slot.id.toLong(), slot.name))
+        with(slot.settings) {
+            db.settingsDao().update(
+                SettingsEntity(
+                    id = slot.id.toLong(),
+                    plantingPasswordLength = plantingPasswordLength,
+                    defusingPasswordLength = defusingPasswordLength,
+                    timeToExplode = timeToExplode,
+                    wrongPasswordPenalty = wrongPasswordPenalty,
+                    saveSlotOwnerId = slot.id.toLong()
+                )
+            )
+        }
     }
-
-    private fun generateSlotId(): Long =
-        db.saveSlotDao().getAllSlots().maxOfOrNull { it.slotId + 1 } ?: 0
-
-    private fun generateSettingId(): Long =
-        db.settingsDao().getAll().maxOfOrNull { it.id + 1 } ?: 0
 }

@@ -14,9 +14,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlanningScreenViewModel @Inject constructor(private val repository : Repository) : ViewModel() {
-    private val _uiState = MutableStateFlow(GameSettings())
-    val uiState: StateFlow<GameSettings> = _uiState
+class PlanningScreenViewModel @Inject constructor(private val repository: Repository) :
+    ViewModel() {
+    private val _uiState = MutableStateFlow(PlanningScreenUiState(mutableListOf()))
+    val uiState: StateFlow<PlanningScreenUiState> = _uiState
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+                _uiState.value =
+                    _uiState.value.copy(saveSlots = repository.getAllSaveSlotsWithSettings())
+        }
+    }
 
     fun changePlantingPasswordLength(passwordLength: Int) {
         _uiState.value = _uiState.value.copy(plantingPasswordLength = passwordLength)
@@ -34,11 +42,30 @@ class PlanningScreenViewModel @Inject constructor(private val repository : Repos
         _uiState.value = _uiState.value.copy(wrongPasswordPenalty = penaltyTime)
     }
 
-    fun saveSettingsToSlot() {
-        viewModelScope.launch(Dispatchers.IO){
-            repository.addSaveSlotWithSettings(SaveSlot("1",_uiState.value))
-            Log.e("asd",repository.getAllSaveSlotsWithSettings().toString())
+    fun saveSettingsToSlot(slotId: Int, slotName: String) {
+        with(_uiState.value) {
+            val saveSlot = SaveSlot(
+                slotName, GameSettings(
+                    plantingPasswordLength = plantingPasswordLength,
+                    defusingPasswordLength = defusingPasswordLength,
+                    timeToExplode = timeToExplode,
+                    wrongPasswordPenalty = wrongPasswordPenalty
+                ), slotId
+            )
+            Log.e(saveSlot.id.toString(),saveSlot.id.toString())
+
+            viewModelScope.launch(Dispatchers.IO) {
+                if (saveSlots.getOrNull(slotId-1) == null) {
+                    repository.addSaveSlotWithSettings(
+                        saveSlot
+                    )
+                } else {
+                    repository.updateSlot(saveSlot)
+                }
+             Log.e("asd",repository.getAllSaveSlotsWithSettings().toString())
+                _uiState.value =
+                    _uiState.value.copy(saveSlots = repository.getAllSaveSlotsWithSettings())
+            }
         }
     }
-
 }

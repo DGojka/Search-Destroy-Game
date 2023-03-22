@@ -1,7 +1,5 @@
 package com.example.searchanddestroy.repository
 
-import com.example.searchanddestroy.database.entity.SettingsEntity
-
 interface Repository {
     suspend fun getAllSaveSlotsWithSettings() : List<SaveSlot>
 
@@ -9,5 +7,5 @@ interface Repository {
 
     suspend fun addSaveSlotWithSettings(slot : SaveSlot)
 
-    suspend fun updateSlot(slotId: Long, newSettings: SettingsEntity)
+    suspend fun updateSlot(slot: SaveSlot)
 }
