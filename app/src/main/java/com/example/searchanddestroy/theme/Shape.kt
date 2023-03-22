@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.ui.theme
+package com.example.searchanddestroy.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

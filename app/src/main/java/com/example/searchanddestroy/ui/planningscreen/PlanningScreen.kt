@@ -34,14 +34,12 @@ import com.example.searchanddestroy.navigation.Screen.Companion.SETTINGS
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_PASSWORD_LENGTH
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MAX_TIME_TO_EXPLODE
 import com.example.searchanddestroy.database.DefaultSettings.Companion.MIN_TIME_TO_EXPLODE
-import com.example.searchanddestroy.ui.theme.WhiteSmoke
-import com.google.gson.Gson
+import com.example.searchanddestroy.theme.WhiteSmoke
 import com.google.gson.GsonBuilder
 
 @Composable
 fun PlanningScreen(navController: NavController) {
     val vm = hiltViewModel<PlanningScreenViewModel>()
-    val gson = GsonBuilder().create()
     Box(
         Modifier
             .fillMaxSize()
@@ -53,7 +51,7 @@ fun PlanningScreen(navController: NavController) {
         }
         Settings(vm)
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            StartGameButton(navController, vm, gson)
+            StartGameButton(navController, vm)
         }
     }
 }
@@ -78,8 +76,8 @@ private fun SaveSlotList(vm: PlanningScreenViewModel) {
             items(4) {
                 SaveSlot(
                     vm = vm,
-                    slotId = it+1,
-                    slotName = getOrNull(it+1)?.name ?: "Empty save slot"
+                    slotId = it + 1,
+                    slotName = getOrNull(it + 1)?.name ?: stringResource(id = R.string.empty_slot)
                 )
             }
         }
@@ -146,20 +144,20 @@ private fun SaveSlotDialog(
                     vm.saveSettingsToSlot(slotId, newSlotName)
                     onDismiss()
                 }) {
-                    Text("Override current settings")
+                    Text(stringResource(id = R.string.override_settings))
                 }
                 Button(onClick = {
                     vm.importSettingsFromSlot(slotId)
                     onDismiss()
                 }) {
-                    Text("Import settings")
+                    Text(stringResource(id = R.string.import_settings))
                 }
             } else {
                 Button(onClick = {
                     vm.saveSettingsToSlot(slotId, newSlotName)
                     onDismiss()
                 }) {
-                    Text("Save settings")
+                    Text(stringResource(id = R.string.save_settings))
                 }
             }
         }
@@ -177,7 +175,7 @@ fun ExerciseNameControls(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp, bottom = 8.dp),
-        text = "Slot name",
+        text = stringResource(id = R.string.slot_name),
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold
     )
@@ -205,7 +203,7 @@ fun ExerciseNameControls(
                 } else {
                     Toast.makeText(
                         context,
-                        "Slot name can be up to 20 characters long",
+                        R.string.slot_name_max_characters,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -223,14 +221,16 @@ private fun PlantingPasswordLength(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.plant_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = vm.uiState.collectAsState().value.plantingPasswordLength.toString(), onValueChange = {
+            value = vm.uiState.collectAsState().value.plantingPasswordLength.toString(),
+            onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH) {
                     vm.changePlantingPasswordLength(it.toIntOrNull() ?: 1)
                 } else {
                     vm.changePlantingPasswordLength(MAX_PASSWORD_LENGTH)
                 }
 
-            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") })
+            },
+            label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") })
     }
 }
 
@@ -243,13 +243,15 @@ private fun DefusingPasswordLength(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.defusing_length))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = vm.uiState.collectAsState().value.defusingPasswordLength.toString(), onValueChange = {
+            value = vm.uiState.collectAsState().value.defusingPasswordLength.toString(),
+            onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_PASSWORD_LENGTH) {
                     vm.changeDefusingPasswordLength(it.toIntOrNull() ?: 1)
                 } else {
                     vm.changeDefusingPasswordLength(MAX_PASSWORD_LENGTH)
                 }
-            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") }
+            },
+            label = { Text(stringResource(id = R.string.max_value) + " $MAX_PASSWORD_LENGTH") }
         )
     }
 }
@@ -284,18 +286,21 @@ private fun WrongPasswordPenalty(vm: PlanningScreenViewModel) {
         Text(text = stringResource(id = R.string.wrong_password_penalty))
         TextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            value = vm.uiState.collectAsState().value.wrongPasswordPenalty.toString(), onValueChange = {
+            value = vm.uiState.collectAsState().value.wrongPasswordPenalty.toString(),
+            onValueChange = {
                 if ((it.toIntOrNull() ?: 0) <= MAX_TIME_TO_EXPLODE) {
                     vm.changeWrongPasswordPenalty(it.toIntOrNull() ?: 0)
                 } else {
                     vm.changeWrongPasswordPenalty(MAX_TIME_TO_EXPLODE)
                 }
-            }, label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
+            },
+            label = { Text(stringResource(id = R.string.max_value) + " $MAX_TIME_TO_EXPLODE") })
     }
 }
 
 @Composable
-private fun StartGameButton(navController: NavController, vm: PlanningScreenViewModel, gson: Gson) {
+private fun StartGameButton(navController: NavController, vm: PlanningScreenViewModel) {
+    val gson = GsonBuilder().create()
     Button(onClick = {
         vm.saveLastUsedSettingsToDb()
         navController.navigate(

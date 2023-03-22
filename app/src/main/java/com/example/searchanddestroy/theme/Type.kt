@@ -1,4 +1,4 @@
-package com.example.searchanddestroy.ui.theme
+package com.example.searchanddestroy.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
