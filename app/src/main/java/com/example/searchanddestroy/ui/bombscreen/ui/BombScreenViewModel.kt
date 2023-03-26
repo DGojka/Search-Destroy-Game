@@ -9,7 +9,7 @@ import com.example.searchanddestroy.sounds.Player
 import com.example.searchanddestroy.sounds.SoundTrack
 import com.example.searchanddestroy.sounds.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
-import com.example.searchanddestroy.ui.planningscreen.data.DefaultSettings
+import com.example.searchanddestroy.database.DefaultSettings
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,7 +62,7 @@ class BombScreenViewModel @Inject constructor(
             defuse(statePlanted)
         } else {
             Log.i(LOG_TAG, "WRONG PASSWORD DEFUSING")
-            if (statePlanted.currentMs/ 1000 > DefaultSettings.MIN_TIME_TO_EXPLODE) {
+            if (statePlanted.currentMs / 1000 > DefaultSettings.MIN_TIME_TO_EXPLODE) {
                 applyPenalty(statePlanted)
             } else {
                 _uiState.value =
@@ -87,7 +87,7 @@ class BombScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun initBomb(){
+    private suspend fun initBomb() {
         player.playSound(SoundTrack.BOMB_PLANTED)
         player.playBombSound()
         Log.i(LOG_TAG, "BOMB PLANTED")
@@ -106,7 +106,7 @@ class BombScreenViewModel @Inject constructor(
         timer.flow.takeWhile { it >= 0 }.collect { currentMs ->
             _uiState.value =
                 (_uiState.value as BombScreenUiState.Planted).copy(currentMs = currentMs)
-            if (currentMs/1000 == intenseBombBeepingTime) {
+            if (currentMs / 1000 == intenseBombBeepingTime) {
                 player.stopBombSound()
                 player.playSound(SoundTrack.INTENSE_BOMB_SOUND)
             }
@@ -117,7 +117,7 @@ class BombScreenViewModel @Inject constructor(
 
     private fun applyPenalty(state: BombScreenUiState.Planted) {
         val timeWithPenalty =
-            ceil((state.currentMs).toDouble()/1000 - settings.wrongPasswordPenalty).toInt()
+            ceil((state.currentMs).toDouble() / 1000 - settings.wrongPasswordPenalty).toInt()
         if (timeWithPenalty > DefaultSettings.MIN_TIME_TO_EXPLODE) {
             timer.setDuration(timeWithPenalty)
             if (timeWithPenalty <= 0) {

@@ -57,7 +57,9 @@ dependencies {
     implementation coroutines
     implementation daggerHilt
     implementation gson
+    implementation room
 
+    kapt roomKapt
     kapt daggerHiltKapt
     runtimeOnly coroutinesRunTime
 

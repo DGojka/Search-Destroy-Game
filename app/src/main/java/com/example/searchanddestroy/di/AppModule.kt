@@ -1,6 +1,11 @@
 package com.example.searchanddestroy.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
+import com.example.searchanddestroy.database.AppDatabase
+import com.example.searchanddestroy.repository.Repository
+import com.example.searchanddestroy.repository.RepositoryImpl
 import com.example.searchanddestroy.sounds.Player
 import com.example.searchanddestroy.sounds.Speaker
 import dagger.Module
@@ -25,6 +30,20 @@ class AppModule {
     @Singleton
     fun providePlayer(@ApplicationContext appContext: Context): Player {
         return Player(appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(application: Application): AppDatabase = Room.databaseBuilder(
+        application.applicationContext,
+        AppDatabase::class.java,
+        AppDatabase.NAME
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideRepository(db: AppDatabase): Repository{
+        return RepositoryImpl(db)
     }
 }
 

@@ -12,4 +12,10 @@
     <string name="wrong_password_penalty">"Wrong password penalty:</string>
     <string name="start_game">START GAME</string>
     <string name="max_value">Max value: </string>
+    <string name="empty_slot">Empty save slot</string>
+    <string name="override_settings">Override current settings</string>
+    <string name="import_settings">Import settings</string>
+    <string name="save_settings">Save settings</string>
+    <string name="slot_name_max_characters">Slot name can be up top 20 characters long</string>
+    <string name="slot_name">Slot name</string>
 </resources>
