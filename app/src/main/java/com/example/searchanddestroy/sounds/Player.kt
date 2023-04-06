@@ -35,6 +35,7 @@ class Player(private val context: Context) {
             SoundTrack.BOMB_PLANTED -> R.raw.bomb_planted
             SoundTrack.BOMB_SOUND -> R.raw.bomb_sound
             SoundTrack.INTENSE_BOMB_SOUND -> R.raw.intense_bomb_sound
+            SoundTrack.EXPLOSION -> R.raw.explosion
         }
     }
 }

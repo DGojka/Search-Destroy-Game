@@ -9,7 +9,6 @@ import com.example.searchanddestroy.sounds.Player
 import com.example.searchanddestroy.sounds.SoundTrack
 import com.example.searchanddestroy.sounds.Speaker
 import com.example.searchanddestroy.ui.bombscreen.Timer
-import com.example.searchanddestroy.database.DefaultSettings
 import com.example.searchanddestroy.ui.planningscreen.data.GameSettings
 import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,12 +61,9 @@ class BombScreenViewModel @Inject constructor(
             defuse(statePlanted)
         } else {
             Log.i(LOG_TAG, "WRONG PASSWORD DEFUSING")
-            if (statePlanted.currentMs / 1000 > DefaultSettings.MIN_TIME_TO_EXPLODE) {
-                applyPenalty(statePlanted)
-            } else {
-                _uiState.value =
-                    statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
-            }
+            applyPenalty(statePlanted)
+            _uiState.value =
+                statePlanted.copy(password = generateRandomString(settings.defusingPasswordLength))
         }
     }
 
@@ -77,6 +73,7 @@ class BombScreenViewModel @Inject constructor(
             speaker.say(stringId = R.string.bomb_defused)
         }
         timer.pause()
+        player.stopBombSound()
         _uiState.value = state.copy(defused = true)
     }
 
@@ -111,23 +108,19 @@ class BombScreenViewModel @Inject constructor(
                 player.playSound(SoundTrack.INTENSE_BOMB_SOUND)
             }
         }
+        explode()
+    }
+
+    private suspend fun explode(){
         _uiState.emit(BombScreenUiState.Exploded)
+        player.playSound(SoundTrack.EXPLOSION)
         player.stopBombSound()
     }
 
     private fun applyPenalty(state: BombScreenUiState.Planted) {
         val timeWithPenalty =
             ceil((state.currentMs).toDouble() / 1000 - settings.wrongPasswordPenalty).toInt()
-        if (timeWithPenalty > DefaultSettings.MIN_TIME_TO_EXPLODE) {
             timer.setDuration(timeWithPenalty)
-            if (timeWithPenalty <= 0) {
-                viewModelScope.launch {
-                    _uiState.emit(BombScreenUiState.Exploded)
-                }
-            }
-        } else {
-            timer.setDuration(DefaultSettings.MIN_TIME_TO_EXPLODE)
-        }
     }
 
     private fun doesPasswordMatch(password: String): Boolean {
