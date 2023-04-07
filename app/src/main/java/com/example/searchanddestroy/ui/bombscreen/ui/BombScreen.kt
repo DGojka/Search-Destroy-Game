@@ -99,11 +99,11 @@ private fun BombPlanted(
                     totalSeconds = totalTime.toFloat() * 1000,
                     currentSeconds = currentSeconds
                 )
-                TypePassword(onPasswordEntered = { typedPassword = it })
+                TypePassword(onPasswordEntered = {
+                    typedPassword = it
+                    vm.updateCurrentPassword(it)
+                })
                 Spacer(Modifier.height(24.dp))
-                Button(onClick = { vm.startDefusing(typedPassword) }) {
-                    Text(text = stringResource(id = R.string.defuse))
-                }
             }
         } else {
             Column(
@@ -192,8 +192,11 @@ private fun BombExploded() {
 @Composable
 private fun TypePassword(onPasswordEntered: (password: String) -> Unit) {
     var typedPassword by remember { mutableStateOf("") }
-    TextField(value = typedPassword,  visualTransformation = PasswordVisualTransformation(), onValueChange = {
-        typedPassword = it
-        onPasswordEntered(typedPassword)
-    })
+    TextField(
+        value = typedPassword,
+        visualTransformation = PasswordVisualTransformation(),
+        onValueChange = {
+            typedPassword = it
+            onPasswordEntered(typedPassword)
+        })
 }

@@ -67,6 +67,15 @@ class BombScreenViewModel @Inject constructor(
         }
     }
 
+    fun updateCurrentPassword(password: String) {
+        val statePlanted = _uiState.value as BombScreenUiState.Planted
+        _uiState.value =
+            statePlanted.copy(currentPasswordLength = password.length)
+        if(password.length == settings.defusingPasswordLength){
+            startDefusing(password)
+        }
+    }
+
     private fun defuse(state: BombScreenUiState.Planted) {
         Log.i(LOG_TAG, "BOMB DEFUSED")
         viewModelScope.launch {
@@ -90,9 +99,10 @@ class BombScreenViewModel @Inject constructor(
         Log.i(LOG_TAG, "BOMB PLANTED")
         _uiState.emit(
             BombScreenUiState.Planted(
-                generateRandomString(settings.defusingPasswordLength),
-                settings.timeToExplode,
-                settings.timeToExplode.toFloat()
+                password = generateRandomString(settings.defusingPasswordLength),
+                totalSeconds = settings.timeToExplode,
+                currentMs =  settings.timeToExplode.toFloat(),
+                currentPasswordLength = 0,
             )
         )
     }
@@ -111,7 +121,7 @@ class BombScreenViewModel @Inject constructor(
         explode()
     }
 
-    private suspend fun explode(){
+    private suspend fun explode() {
         _uiState.emit(BombScreenUiState.Exploded)
         player.playSound(SoundTrack.EXPLOSION)
         player.stopBombSound()
@@ -120,7 +130,7 @@ class BombScreenViewModel @Inject constructor(
     private fun applyPenalty(state: BombScreenUiState.Planted) {
         val timeWithPenalty =
             ceil((state.currentMs).toDouble() / 1000 - settings.wrongPasswordPenalty).toInt()
-            timer.setDuration(timeWithPenalty)
+        timer.setDuration(timeWithPenalty)
     }
 
     private fun doesPasswordMatch(password: String): Boolean {

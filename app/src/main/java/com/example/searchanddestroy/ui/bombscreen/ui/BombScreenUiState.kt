@@ -9,6 +9,7 @@ sealed class BombScreenUiState(open val password: String) {
         override val password: String,
         val totalSeconds: Int,
         val currentMs: Float,
+        val currentPasswordLength : Int = 0,
         val defused: Boolean = false
     ) : BombScreenUiState(password)
 }
