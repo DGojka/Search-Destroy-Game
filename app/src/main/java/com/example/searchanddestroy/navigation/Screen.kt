@@ -1,6 +1,7 @@
 package com.example.searchanddestroy.navigation
 
 sealed class Screen(val route: String) {
+    object SplashScreen : Screen("splashScreen")
     object PlanningScreen : Screen("planningScreen")
     object BombScreen : Screen("bombScreen/settings={settings}")
 
